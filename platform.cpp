@@ -1,250 +1,206 @@
-//
-//  platform.cpp
-//  CHIP-8
-//
-// NOT created by Alex on 8/2/22.
-// created by Austin Morlan on some unknown date (6/8/22?).
-//
-// Copied (with very, very, very slight changes) from Austin Morlan again because I'm a hack and a fraud and still need to learn more SDL :D
-// Also I'm writing this on my M1 Mac and SDL doesn't seem to play well with it sometimes :D
-
-
-// :(
-
 #include "platform.hpp"
-#include <iostream>
-#include <SDL2/SDL.h>
-using namespace std;
-class Platform
+
+void Platform::Update(void const* buffer, int pitch)
 {
-public:
-    Platform(char const* title, int windowWidth, int windowHeight, int textureWidth, int textureHeight)
+    SDL_UpdateTexture(texture, nullptr, buffer, pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+    SDL_RenderPresent(renderer);
+}
+
+bool Platform::ProcessInput(uint8_t* keys)
+{
+    bool quit = false;
+    
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event))
     {
-        SDL_Init(SDL_INIT_VIDEO);
-
-        window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
-
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-        texture = SDL_CreateTexture(
-            renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, textureWidth, textureHeight);
-    }
-
-    ~Platform()
-    {
-        SDL_DestroyTexture(texture);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-    }
-
-    void Update(void const* buffer, int pitch)
-    {
-        SDL_UpdateTexture(texture, nullptr, buffer, pitch);
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer);
-    }
-
-    bool ProcessInput(uint8_t* keys)
-    {
-        bool quit = false;
-
-        SDL_Event event;
-
-        while (SDL_PollEvent(&event))
+        switch (event.type)
         {
-            switch (event.type)
+            case SDL_QUIT:
             {
-                case SDL_QUIT:
-                {
-                    quit = true;
-                } break;
+                quit = true;
+            } break;
 
-                case SDL_KEYDOWN:
+            case SDL_KEYDOWN:
+            {
+                switch (event.key.keysym.sym)
                 {
-                    switch (event.key.keysym.sym)
+                    case SDLK_ESCAPE:
                     {
-                        case SDLK_ESCAPE:
-                        {
-                            quit = true;
-                        } break;
+                        quit = true;
+                    } break;
 
-                        case SDLK_x:
-                        {
-                            keys[0] = 1;
-                        } break;
-
-                        case SDLK_1:
-                        {
-                            keys[1] = 1;
-                        } break;
-
-                        case SDLK_2:
-                        {
-                            keys[2] = 1;
-                        } break;
-
-                        case SDLK_3:
-                        {
-                            keys[3] = 1;
-                        } break;
-
-                        case SDLK_q:
-                        {
-                            keys[4] = 1;
-                        } break;
-
-                        case SDLK_w:
-                        {
-                            keys[5] = 1;
-                        } break;
-
-                        case SDLK_e:
-                        {
-                            keys[6] = 1;
-                        } break;
-
-                        case SDLK_a:
-                        {
-                            keys[7] = 1;
-                        } break;
-
-                        case SDLK_s:
-                        {
-                            keys[8] = 1;
-                        } break;
-
-                        case SDLK_d:
-                        {
-                            keys[9] = 1;
-                        } break;
-
-                        case SDLK_z:
-                        {
-                            keys[0xA] = 1;
-                        } break;
-
-                        case SDLK_c:
-                        {
-                            keys[0xB] = 1;
-                        } break;
-
-                        case SDLK_4:
-                        {
-                            keys[0xC] = 1;
-                        } break;
-
-                        case SDLK_r:
-                        {
-                            keys[0xD] = 1;
-                        } break;
-
-                        case SDLK_f:
-                        {
-                            keys[0xE] = 1;
-                        } break;
-
-                        case SDLK_v:
-                        {
-                            keys[0xF] = 1;
-                        } break;
-                    }
-                } break;
-
-                case SDL_KEYUP:
-                {
-                    switch (event.key.keysym.sym)
+                    case SDLK_x:
                     {
-                        case SDLK_x:
-                        {
-                            keys[0] = 0;
-                        } break;
+                        keys[0] = 1;
+                    } break;
 
-                        case SDLK_1:
-                        {
-                            keys[1] = 0;
-                        } break;
+                    case SDLK_1:
+                    {
+                        keys[1] = 1;
+                    } break;
 
-                        case SDLK_2:
-                        {
-                            keys[2] = 0;
-                        } break;
+                    case SDLK_2:
+                    {
+                        keys[2] = 1;
+                    } break;
 
-                        case SDLK_3:
-                        {
-                            keys[3] = 0;
-                        } break;
+                    case SDLK_3:
+                    {
+                        keys[3] = 1;
+                    } break;
 
-                        case SDLK_q:
-                        {
-                            keys[4] = 0;
-                        } break;
+                    case SDLK_q:
+                    {
+                        keys[4] = 1;
+                    } break;
 
-                        case SDLK_w:
-                        {
-                            keys[5] = 0;
-                        } break;
+                    case SDLK_w:
+                    {
+                        keys[5] = 1;
+                    } break;
 
-                        case SDLK_e:
-                        {
-                            keys[6] = 0;
-                        } break;
+                    case SDLK_e:
+                    {
+                        keys[6] = 1;
+                    } break;
 
-                        case SDLK_a:
-                        {
-                            keys[7] = 0;
-                        } break;
+                    case SDLK_a:
+                    {
+                        keys[7] = 1;
+                    } break;
 
-                        case SDLK_s:
-                        {
-                            keys[8] = 0;
-                        } break;
+                    case SDLK_s:
+                    {
+                        keys[8] = 1;
+                    } break;
 
-                        case SDLK_d:
-                        {
-                            keys[9] = 0;
-                        } break;
+                    case SDLK_d:
+                    {
+                        keys[9] = 1;
+                    } break;
 
-                        case SDLK_z:
-                        {
-                            keys[0xA] = 0;
-                        } break;
+                    case SDLK_z:
+                    {
+                        keys[0xA] = 1;
+                    } break;
 
-                        case SDLK_c:
-                        {
-                            keys[0xB] = 0;
-                        } break;
+                    case SDLK_c:
+                    {
+                        keys[0xB] = 1;
+                    } break;
 
-                        case SDLK_4:
-                        {
-                            keys[0xC] = 0;
-                        } break;
+                    case SDLK_4:
+                    {
+                        keys[0xC] = 1;
+                    } break;
 
-                        case SDLK_r:
-                        {
-                            keys[0xD] = 0;
-                        } break;
+                    case SDLK_r:
+                    {
+                        keys[0xD] = 1;
+                    } break;
 
-                        case SDLK_f:
-                        {
-                            keys[0xE] = 0;
-                        } break;
+                    case SDLK_f:
+                    {
+                        keys[0xE] = 1;
+                    } break;
 
-                        case SDLK_v:
-                        {
-                            keys[0xF] = 0;
-                        } break;
-                    }
-                } break;
-            }
+                    case SDLK_v:
+                    {
+                        keys[0xF] = 1;
+                    } break;
+                }
+            } break;
+
+            case SDL_KEYUP:
+            {
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_x:
+                    {
+                        keys[0] = 0;
+                    } break;
+
+                    case SDLK_1:
+                    {
+                        keys[1] = 0;
+                    } break;
+
+                    case SDLK_2:
+                    {
+                        keys[2] = 0;
+                    } break;
+
+                    case SDLK_3:
+                    {
+                        keys[3] = 0;
+                    } break;
+
+                    case SDLK_q:
+                    {
+                        keys[4] = 0;
+                    } break;
+
+                    case SDLK_w:
+                    {
+                        keys[5] = 0;
+                    } break;
+
+                    case SDLK_e:
+                    {
+                        keys[6] = 0;
+                    } break;
+
+                    case SDLK_a:
+                    {
+                        keys[7] = 0;
+                    } break;
+
+                    case SDLK_s:
+                    {
+                        keys[8] = 0;
+                    } break;
+
+                    case SDLK_d:
+                    {
+                        keys[9] = 0;
+                    } break;
+
+                    case SDLK_z:
+                    {
+                        keys[0xA] = 0;
+                    } break;
+
+                    case SDLK_c:
+                    {
+                        keys[0xB] = 0;
+                    } break;
+
+                    case SDLK_4:
+                    {
+                        keys[0xC] = 0;
+                    } break;
+
+                    case SDLK_r:
+                    {
+                        keys[0xD] = 0;
+                    } break;
+
+                    case SDLK_f:
+                    {
+                        keys[0xE] = 0;
+                    } break;
+
+                    case SDLK_v:
+                    {
+                        keys[0xF] = 0;
+                    } break;
+                }
+            } break;
         }
-
-        return quit;
     }
 
-private:
-    SDL_Window* window = NULL; //Literally changed these to init to NULL and thats it
-    SDL_Renderer* renderer = NULL;
-    SDL_Texture* texture = NULL;
-};
+    return quit;
+}
