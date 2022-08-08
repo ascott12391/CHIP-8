@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <stack>
-#include "cpu.cpp"
-#include "platform.cpp"
+#include "cpu.hpp"
+#include "platform.hpp"
 #include <getopt.h>
 using namespace std;
 
