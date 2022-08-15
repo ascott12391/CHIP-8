@@ -1,6 +1,6 @@
 #include "platform.hpp"
 
-void Platform::Update(const uint32_t (&video)[64][32], int pitch)
+void Platform::Update(const uint32_t (&video)[64][32], int pitch) //This is totally original, I redid the way that grpahics were updated by drawing the rectangles directly onto the screen every frame. Possibly not the fastest but it works. Also I made them green beause I'm a sucker for that black and green Fallout feel.
 {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer );
