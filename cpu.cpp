@@ -137,7 +137,5 @@ void CPU::cycle()
                     break;
             }
     }
-    timer>0?timer--:timer=0;
-    soundTimer>0?soundTimer--:soundTimer=0;
     
 }

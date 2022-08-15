@@ -68,7 +68,12 @@ int main(int argc,char * argv[]) {
         if (dt > delay)
         {
             lastCycleTime = currentTime;
-            cpu.cycle();
+            for (int i = 0; i < 8; i++)
+            {
+                cpu.cycle();
+            }
+            cpu.timer>0?cpu.timer--:cpu.timer=0;
+            cpu.soundTimer>0?cpu.soundTimer--:cpu.soundTimer=0;
             platform.Update(cpu.video, size);
             
         }
