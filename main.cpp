@@ -57,7 +57,6 @@ int main(int argc,char * argv[]) {
     CPU cpu;
     const char* temp = rom.c_str();
     cpu.LoadRom(temp);
-    int videoPitch = sizeof(cpu.video[0])*64;
     auto lastCycleTime = std::chrono::high_resolution_clock::now();
     bool quit = false;
     while (!quit)
@@ -70,7 +69,7 @@ int main(int argc,char * argv[]) {
         {
             lastCycleTime = currentTime;
             cpu.cycle();
-            platform.Update(cpu.video, videoPitch);
+            platform.Update(cpu.video, size);
             
         }
     }

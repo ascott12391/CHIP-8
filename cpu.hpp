@@ -20,6 +20,18 @@ public:
             memory[0x50+i] = fontset[i];
         }
         randByte = uniform_int_distribution<uint8_t>(0, 255U);
+        for (int i = 0; i < 16; i++)
+        {
+            registers[i] = 0;
+            keypad[i] = 0;
+        }
+        for (int i = 0; i < 64; i++)
+        {
+            for (int j = 0; j < 32; j++)
+            {
+                video[i][j] = 0;
+            }
+        }
     }
     uint8_t registers[16]; //Reg VF (the last one) is flag)
     uint8_t memory[4096]; //0x000-0x1FF is (usually) ignorable, 0x050-0x0A0 is for special characters, 0x200-rest is the rom itself
@@ -154,8 +166,8 @@ public:
     }
     void OP_DXYN() //Display sprite
     {
-        uint8_t x = ((opcode&0x0F00)>>8)%64; //Modulo is for wraparound
-        uint8_t y = ((opcode&0x00F0)>>4)%32;
+        uint8_t x = registers[((opcode&0x0F00)>>8)]%64; //Modulo is for wraparound
+        uint8_t y = registers[((opcode&0x00F0)>>4)]%32;
         uint8_t n = opcode&0x000F;
         registers[15] = 0;
         for (int i = index; i < n+index; i++)
@@ -164,7 +176,7 @@ public:
             for (int j = 0; j < 8; j++)
             {
                 uint8_t spritePixel = spriteByte & (0x80 >> j);
-                uint32_t* screenPixel = &video[y + i][x + j];
+                uint32_t* screenPixel = &video[x + j][y + i-index];
                 if (spritePixel)
                 {
                     if (*screenPixel == 0xFFFFFFFF)

@@ -1,10 +1,18 @@
 #include "platform.hpp"
 
-void Platform::Update(void const* buffer, int pitch)
+void Platform::Update(const uint32_t (&video)[64][32], int pitch)
 {
-    SDL_UpdateTexture(texture, nullptr, buffer, pitch);
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderClear(renderer );
+    for (int i = 0; i < 64; i++)
+    {
+        for (int j = 0; j < 32; j++)
+        {
+            SDL_Rect fillRect = { i*pitch, j*pitch, pitch, pitch};
+            video[i][j]!=0?SDL_SetRenderDrawColor( renderer, 0x00, 0xFF, 0x00, 0xFF):SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0x00, 0xFF);
+            SDL_RenderFillRect( renderer, &fillRect );
+        }
+    }
     SDL_RenderPresent(renderer);
 }
 

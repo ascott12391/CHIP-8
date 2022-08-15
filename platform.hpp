@@ -5,11 +5,13 @@
 // NOT created by Alex on 8/2/22.
 // created by Austin Morlan on some unknown date (6/8/22?).
 //
-// Copied (with very, very, very slight changes) from Austin Morlan again because I'm a hack and a fraud and still need to learn more SDL :D
+// Copied in part from Austin Morlan again because I'm a hack and a fraud and still need to learn more SDL :D
 // Also I'm writing this on my M1 Mac and SDL doesn't seem to play well with it sometimes :D
 
 
 // :(
+
+// Update: Had to change fundamentally how update works, so learned some SDL from that :)
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -37,12 +39,13 @@ public:
         SDL_Quit();
     }
 
-    void Update(void const* buffer, int pitch);
+    void Update(const uint32_t (&video)[64][32], int pitch);
 
     bool ProcessInput(uint8_t* keys);
+    
+    SDL_Renderer* renderer = NULL;
 
 private:
     SDL_Window* window = NULL; //Literally changed these to init to NULL and thats it
-    SDL_Renderer* renderer = NULL;
     SDL_Texture* texture = NULL;
 };

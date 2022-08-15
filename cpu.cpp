@@ -2,7 +2,7 @@
 
 void CPU::LoadRom(const char* const filename)
 {
-    ifstream file(filename);
+    ifstream file(filename,std::ios::binary | std::ios::ate);
     if (!file.is_open()) {
         cout << "ERROR: Unable to open file\n";
         exit(1);
@@ -30,7 +30,7 @@ void CPU::cycle()
 {
     opcode = (memory[pc]<<8|memory[pc+1]);
     pc+=2;
-    switch (opcode&0xF000>>12){
+    switch ((opcode&0xF000)>>12){
         case 1:
             OP_1NNN();
             break;
@@ -102,6 +102,40 @@ void CPU::cycle()
                     break;
             }
             break;
+        case 0xF:
+            switch (opcode&0x000F)
+            {
+                case 7:
+                    OP_FX07();
+                    break;
+                case 0xA:
+                    OP_FX0A();
+                    break;
+                case 0x5:
+                    switch (opcode&0x00F0)
+                    {
+                        case 0x10:
+                            OP_FX15();
+                            break;
+                        case 0x50:
+                            OP_FX55();
+                            break;
+                        case 0x60:
+                            OP_FX65();
+                            break;
+                    }
+                case 0x8:
+                    OP_FX18();
+                    break;
+                case 0xE:
+                    OP_FXIE();
+                    break;
+                case 0x9:
+                    OP_FX29();
+                case 0x3:
+                    OP_FX33();
+                    break;
+            }
     }
     timer>0?timer--:timer=0;
     soundTimer>0?soundTimer--:soundTimer=0;
